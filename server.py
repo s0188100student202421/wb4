@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import mysql.connector
+from  mysql.connector import Error
 import cgi
 import re
 import secrets
@@ -81,7 +82,6 @@ class HttpProcessor(BaseHTTPRequestHandler):
     def do_POST(self):
         cookie = cookies.SimpleCookie(self.headers.get('Cookie'))
         stored_token = cookie.get('form_token', None)
-        
 
         if not stored_token:
             self.send_response(403)
@@ -151,7 +151,8 @@ class HttpProcessor(BaseHTTPRequestHandler):
             cookie["errors"]['max-age'] = 3600
 
             self.send_response(302)
-            self.send_header('Location', self.path)
+            print(self.path)
+            self.send_header('Location', '/wb4/')
             for key, morsel in cookie.items():
                 self.send_header('Set-Cookie', morsel.OutputString())
             self.end_headers()
@@ -161,7 +162,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                 host='localhost',
                 database='u68824',
                 user='u68824',
-                password='MyStrongPass'
+                password='u68824'
             )
 
             if connection.is_connected():
@@ -174,7 +175,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
                 user_id = cursor.lastrowid
                 for lang in languages:
                     cursor.execute("""
-                        INSERT INTO programming_languages (id, name)
+                        INSERT INTO programming_languages (id, guid)
                         VALUES (%s, %s)
                     """, (user_id, lang))
 
@@ -216,5 +217,5 @@ class HttpProcessor(BaseHTTPRequestHandler):
 
 
 # Запуск сервера
-serv = HTTPServer(("localhost", 8888), HttpProcessor)
+serv = HTTPServer(("0.0.0.0", 8889), HttpProcessor)
 serv.serve_forever()
