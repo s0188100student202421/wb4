@@ -35,7 +35,7 @@ class HttpProcessor(BaseHTTPRequestHandler):
             self.send_header('Set-Cookie', cookie.output(header='', sep=''))
         self.end_headers()
 
-        with open('index.html', 'r', encoding='utf-8') as file:  
+        with open('server.html', 'r', encoding='utf-8') as file:  
             html_content = file.read().replace("{{form_token}}", token)
         
         form_data = {
